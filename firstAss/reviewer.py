@@ -36,6 +36,8 @@ cnx = mysql.connector.connect(
     host='127.0.0.1',
     database='sakila'
 )
+cnx.autocommit = True
+
 # Create a cursor
 cursor = cnx.cursor()
 def create_tables_if_needed() -> None:
@@ -54,7 +56,7 @@ def create_tables_if_needed() -> None:
             `{LAST_NAME_COLUMN}` varchar(45) NOT NULL, 
             PRIMARY KEY (`{REVIEWER_ID_COLUMN}`) 
         );''')
-    cnx.commit()
+    # cnx.commit()
     cursor.execute(f'''
         CREATE TABLE IF NOT EXISTS {RATING_TABLE_NAME} (
             `{REVIEWER_ID_COLUMN}` int NOT NULL
@@ -69,7 +71,7 @@ def create_tables_if_needed() -> None:
         # KEY `{REVIEWER_ID_COLUMN}` (`{REVIEWER_ID_COLUMN}`),
         # KEY `{REVIEWER_ID_COLUMN}` (`{REVIEWER_ID_COLUMN}`),
             
-    cnx.commit()
+    # cnx.commit()
 
 def get_reviewer_details() -> dict[str: str]:
     '''
@@ -114,7 +116,7 @@ def get_reviewer_details() -> dict[str: str]:
                     # Execute the INSERT statement
                     cursor.execute(insert_stmt, (reviewer_id_str,reviewer_name, reviewer_last))
                     # insert the data into the database and validate it
-                    cnx.commit()
+                    # cnx.commit()
                     # break the loop only when the user inserted valid details
                     return {REVIEWER_ID_COLUMN: str(reviewer_id_int), FIRST_NAME_COLUMN :reviewer_name, LAST_NAME_COLUMN: reviewer_last}
 
@@ -202,7 +204,7 @@ def review_film(film_id: int, reviewer_id: int) -> None:
                 cursor.execute(query_update_if_not_existing, 
                     [reviewer_id, film_id, float(rating_input), reviewer_id, film_id, float(rating_input)]
                 )
-                cnx.commit()
+                # cnx.commit()
                 print("Thanks for the review")
                 return 
                 
@@ -237,6 +239,7 @@ def print_reviewer_top_comments(reviewer_id) -> None:
         print(f'For the movie {row_json[TITLE_COLUMN]} reviewer {row_json[FULL_NAME_COLUMN]} and the rating {row_json[RATING_COLUMN]}')
 
 def main():
+    
     # init the tables for the database if needed 
     create_tables_if_needed()
     # getting the reviewer and if he does not exist create him
@@ -255,6 +258,7 @@ def main():
 
 # run only if you run this script but you can import this function with our running the file 
 if __name__ == '__main__':
+    
     main()
 
     

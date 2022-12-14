@@ -1,7 +1,7 @@
 # assume we needed to lower the text so word like Aa can not appear in the category name
 SELECT 
 	# c.category_id # if you want to show the category id just uncomment the line
-    ,c.name
+    c.name
 FROM sakila.category as c
 WHERE 
 	# lower the name col and check if the string contain a only one time

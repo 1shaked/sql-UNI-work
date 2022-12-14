@@ -1,5 +1,6 @@
 # assumed you only needed the category id and the avg len
 # assumed you did not want to join based on empty category that's way inner join
+# group by the category id and then calculate the average lenght of the movie
 SELECT 
 	C.category_id
     ,AVG(F.length) as AVGLength 

@@ -3,15 +3,17 @@
 SELECT 
 	film_id
 	,title
-    ,F.length
-    ,rating
+    # if you want the length just uncomment
+    # ,F.length
+    # ,rating
     
 FROM sakila.film as F
 WHERE 
 	# filter the length of the movie
-	F.length <= 90
+    # I understand that the length have to be less then 90 minutes and not equal to 90
+	F.length < 90
     # filter for rating with the string G or PG and contain all ages
-	AND ( rating = 'G'
+	AND ( rating like 'G%'
     OR rating like 'PG%'
     )
 
