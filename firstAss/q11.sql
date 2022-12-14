@@ -36,6 +36,6 @@ ORDER BY
 	# to enfore that the top row is the hightes diffrent
 	E.amount - EP.amount DESC
 
-# I was 95% sure you wanted only the top row
+# I was 95% sure you wanted only the top row. If you want all the results just deleted next line.
 LIMIT 1
 ;
