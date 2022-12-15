@@ -227,11 +227,10 @@ def print_reviewer_top_comments(reviewer_id) -> None:
         sakila.rating as c 
     INNER JOIN sakila.reviewer as r ON
         r.reviewer_id = c.reviewer_id
-        AND r.reviewer_id = %s
     INNER JOIN sakila.film as f ON
 	    f.film_id = c.film_id
     LIMIT 100'''
-    cursor.execute(query_select_top_rating, [reviewer_id])
+    cursor.execute(query_select_top_rating)
     rows = cursor.fetchall()
     for row in rows:
         # join it into a json so it is easier to print out
