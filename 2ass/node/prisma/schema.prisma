@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+// generator erd {
+//   provider = "prisma-erd-generator"
+//   output = "../ERD.png"
+// }
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  // id    Int     @id @default(autoincrement())
+  username    String  @id // @unique 
+  firstname   String
+  lastname    String
+  dateOfBirth DateTime
+  tagged      Tags[] @relation("tagged")
+  follower    Following[] @relation("follower")
+  following   Following[] @relation("following")
+  page        Pages[]
+  photos      Photos[]
+  log         Log[]
+}
+
+model Pages {
+  id        Int     @id @default(autoincrement()) // THIS WILL CREATE THE unique url
+  user    User    @relation(fields: [username], references: [username])
+  username  String
+  album Album[]
+  calendarEvents CalendarEvents[]
+  log Log[]
+}
+
+model Album {
+  id            Int     @id @default(autoincrement()) // THIS WILL CREATE THE unique url
+  title         String
+  description   String?
+  page          Pages @relation(fields: [pageId], references: [id])
+  pageId        Int
+  photosInAlbum PhotosInAlbum[]
+}
+
+model Photos {
+  id            Int     @id @default(autoincrement()) // THIS WILL CREATE THE unique url
+  xLocation     String
+  yLocation     String
+  author        User    @relation(fields: [authorId], references: [username])
+  authorId      String
+  tags          Tags[]
+  photosInAlbum PhotosInAlbum[]
+}
+
+model Tags {
+  photo Photos @relation(fields: [photoId], references: [id])
+  photoId Int
+  tagged User @relation("tagged",fields: [taggedUserName], references: [username])
+  taggedUserName String
+  @@id([photoId, taggedUserName])
+}
+
+
+model CalendarEvents {
+  id        Int      @id @default(autoincrement())
+  startDate DateTime
+  endDate DateTime
+  description String
+  page Pages @relation(fields: [pageId], references: [id])
+  pageId Int 
+  invitation Invitation[]
+}
+
+
+model Invitation {
+  event CalendarEvents @relation(fields: [eventId], references: [id])
+  eventId        Int 
+  status String 
+  @@id([eventId, status])
+}
+
+model PhotosInAlbum {
+  album Album @relation(fields: [albumId], references: [id])
+  albumId Int
+  photo Photos @relation(fields: [photoId], references: [id])
+  photoId Int
+  @@id([albumId, photoId])
+}
+
+model Following {
+  follower User @relation("follower",fields: [followerName], references: [username])
+  followerName String 
+  
+  following User @relation("following",fields: [followingName], references: [username])
+  followingName String 
+  @@id([followerName , followingName])
+}
+
+
+model Log {
+  page Pages @relation(fields: [pageId], references: [id])
+  pageId Int
+  user User @relation(fields: [username], references: [username])
+  username String
+  time DateTime @default(now())
+  @@id([pageId, time, username])
+}
